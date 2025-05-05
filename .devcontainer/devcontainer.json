@@ -1,0 +1,41 @@
+{
+  "name": "Nest.js Dev Container",
+
+  // Base image with Node.js and Typescript configured
+  "image": "mcr.microsoft.com/devcontainers/typescript-node",
+
+  // 3000 of default
+  "forwardPorts": [3000],
+
+  // Mount volumes to improve performance and persist important data
+  "mounts": [
+    // Cache
+    "source=npm-cache,target=/home/node/.npm,type=volume",
+    // node_modules
+    "source=node_modules,target=/workspace/node_modules,type=volume"
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "nestjs.vscode-nestjs",
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-next"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "explicit"
+        },
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "eslint.format.enable": true
+      }
+    }
+  },
+
+  // Install cli nest and dependencies
+  "postCreateCommand": "npm install -g @nestjs/cli@11.0.6 && npm install",
+
+  "remoteUser": "node"
+}
