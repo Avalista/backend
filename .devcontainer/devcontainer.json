@@ -2,7 +2,7 @@
   "name": "Nest.js Dev Container",
 
   // Base image with Node.js and Typescript configured
-  "image": "mcr.microsoft.com/devcontainers/typescript-node",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:dev-22",
 
   // 3000 of default
   "forwardPorts": [3000],
