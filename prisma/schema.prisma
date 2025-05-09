@@ -1,0 +1,179 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  password String
+  avatar   String
+
+  projectMemberships ProjectMembership[]
+  evaluations        Evaluation[]
+  userBadgeAwards    UserBadgeAward[]
+}
+
+model Project {
+  id   String @id @default(uuid())
+  name String
+
+  projectMemberships ProjectMembership[]
+  screens            Screen[]
+  evaluations        Evaluation[]
+  finalEvaluation    FinalEvaluation?
+}
+
+model ProjectMembership {
+  id       String   @id @default(uuid())
+  role     Role
+  joinedAt DateTime
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+}
+
+model Screen {
+  id         String @id @default(uuid())
+  title      String
+  screenshot String
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+}
+
+model Evaluation {
+  id        String   @id @default(uuid())
+  updatedAt DateTime
+
+  evaluator   User   @relation(fields: [evaluatorId], references: [id])
+  evaluatorId String
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  problems Problem[]
+}
+
+model Problem {
+  id                     String   @id @default(uuid())
+  description            String
+  screenshot             String
+  improvementSuggestions String
+  severity               Severity
+  effort                 Effort
+  resolvedAt             DateTime
+  priority               Boolean
+
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
+  evaluationId String
+
+  heuristic   Heuristic @relation(fields: [heuristicId], references: [id])
+  heuristicId String
+
+  finalProblem FinalProblem?
+}
+
+model FinalEvaluation {
+  id        String   @id @default(uuid())
+  createdAt DateTime
+
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String  @unique
+
+  finalProblems FinalProblem[]
+}
+
+model FinalProblem {
+  id       String @id @default(uuid())
+  comments String
+
+  finalEvaluation   FinalEvaluation @relation(fields: [finalEvaluationId], references: [id])
+  finalEvaluationId String
+
+  problem   Problem @relation(fields: [problemId], references: [id])
+  problemId String  @unique
+}
+
+model Heuristic {
+  id          String @id @default(uuid())
+  code        String
+  name        String
+  description String
+
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String
+
+  problems Problem[]
+  examples Example[]
+}
+
+model Category {
+  id    String @id @default(uuid())
+  name  String
+  color String
+
+  heuristic Heuristic[]
+}
+
+model Example {
+  id          String   @id @default(uuid())
+  description String
+  screenshots String[]
+
+  heuristic   Heuristic @relation(fields: [heuristicId], references: [id])
+  heuristicId String
+}
+
+model Badge {
+  id          String        @id @default(uuid())
+  name        String
+  description String
+  threshold   Int
+  criteria    BadgeCriteria
+
+  userBadgeAwards UserBadgeAward[]
+}
+
+model UserBadgeAward {
+  id        String   @id @default(uuid())
+  awardedAt DateTime
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  badge   Badge  @relation(fields: [badgeId], references: [id])
+  badgeId String
+}
+
+enum Role {
+  ADMIN
+  EVALUATOR
+}
+
+enum Severity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Effort {
+  LIGHT
+  MODERATE
+  HIGH
+}
+
+enum BadgeCriteria {
+  TOTAL_VIOLATIONS
+  CATEGORY_VIOLATIONS
+  DISTINCT_CATEGORIES
+}
