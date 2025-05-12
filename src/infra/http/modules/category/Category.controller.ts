@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { CreateCategoryUseCase } from 'src/modules/category/useCases/createCategoryUseCase/CreateCategoryUseCase';
 import { CreateCategoryBody } from './dtos/CreateCategoryBody';
+import { CategoryViewModel } from './viewModel/CategoryViewModel';
 
 @Controller('categories/')
 export class CategoryController {
@@ -12,6 +13,6 @@ export class CategoryController {
 
     const category = await this.createCategoryUseCase.execute({ name, color });
 
-    return category;
+    return CategoryViewModel.toHttp(category);
   }
 }
