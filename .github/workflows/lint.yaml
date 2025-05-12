@@ -15,4 +15,6 @@ jobs:
         with:
           node-version: '22.x'
       - run: npm ci
+      - run: npx prisma migrate dev
+      - run: npx prisma generate
       - run: npm run lint
