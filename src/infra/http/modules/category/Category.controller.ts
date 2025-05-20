@@ -53,7 +53,7 @@ export class CategoryController {
   }
 
   @Delete(':id')
-  async deletCategory(@Param('id') categoryId: string) {
+  async deleteCategory(@Param('id') categoryId: string) {
     const mockUserId = '0';
     await this.deleteCategoryUseCase.execute({
       categoryId,
