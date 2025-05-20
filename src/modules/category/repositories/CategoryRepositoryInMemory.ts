@@ -31,4 +31,10 @@ export class CategoryRepositoryInMemory implements CategoryRepository {
 
     return Promise.resolve();
   }
+
+  findMany(page: number, perPage: number): Promise<Category[]> {
+    return Promise.resolve(
+      this.categories.slice((page - 1) * perPage, page * perPage),
+    );
+  }
 }
