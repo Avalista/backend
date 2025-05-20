@@ -16,7 +16,7 @@ import { EditCategoryBody } from './dtos/EditCategoryBody';
 import { DeleteCategoryUseCase } from 'src/modules/category/useCases/deleteCategoryUseCase/DeleteCategoryUseCase';
 import { GetManyCategoryUseCase } from 'src/modules/category/useCases/getManyCategoryUseCase/GetManyCategoryUseCase';
 
-@Controller('categories/')
+@Controller('categories')
 export class CategoryController {
   constructor(
     private createCategoryUseCase: CreateCategoryUseCase,
