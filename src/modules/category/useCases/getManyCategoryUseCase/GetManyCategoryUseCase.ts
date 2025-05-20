@@ -1,10 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { CategoryRepository } from '../../repositories/CategoryRepository';
 
 interface getManyCategoryRequest {
   page?: string;
   perPage?: string;
 }
-
+@Injectable()
 export class GetManyCategoryUseCase {
   constructor(private categoryRepository: CategoryRepository) {}
 

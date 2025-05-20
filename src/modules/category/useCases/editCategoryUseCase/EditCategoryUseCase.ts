@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryRepository } from '../../repositories/CategoryRepository';
 
 interface EditCategoryRequest {
@@ -8,6 +8,7 @@ interface EditCategoryRequest {
   color: string;
 }
 
+@Injectable()
 export class EditCategoryUseCase {
   constructor(private categoryRepository: CategoryRepository) {}
 

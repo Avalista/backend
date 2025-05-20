@@ -15,4 +15,38 @@ export class PrismaCategoryRepository implements CategoryRepository {
       data: categoryRaw,
     });
   }
+
+  async delete(id: string): Promise<void> {
+    await this.prisma.category.delete({ where: { id } });
+  }
+
+  async save(category: Category): Promise<void> {
+    const categoryRaw = PrismaCategoryMapper.toPrisma(category);
+
+    await this.prisma.category.update({
+      data: categoryRaw,
+      where: { id: categoryRaw.id },
+    });
+  }
+
+  async findById(id: string): Promise<Category | null> {
+    const categoryRaw = await this.prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (!categoryRaw) return null;
+
+    return PrismaCategoryMapper.toDomain(categoryRaw);
+  }
+
+  async findMany(page: number, perPage: number): Promise<Category[]> {
+    const categories = await this.prisma.category.findMany({
+      take: perPage,
+      skip: (page - 1) * perPage,
+    });
+
+    return categories.map((category) =>
+      PrismaCategoryMapper.toDomain(category),
+    );
+  }
 }

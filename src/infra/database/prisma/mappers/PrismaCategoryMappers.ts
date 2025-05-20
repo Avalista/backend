@@ -9,4 +9,8 @@ export class PrismaCategoryMapper {
       color,
     };
   }
+
+  static toDomain({ id, name, color }: CategoryRaw): Category {
+    return new Category({ name, color }, id);
+  }
 }

@@ -1,10 +1,20 @@
-import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { CreateCategoryUseCase } from 'src/modules/category/useCases/createCategoryUseCase/CreateCategoryUseCase';
 import { CreateCategoryBody } from './dtos/CreateCategoryBody';
 import { CategoryViewModel } from './viewModel/CategoryViewModel';
 import { EditCategoryUseCase } from 'src/modules/category/useCases/editCategoryUseCase/EditCategoryUseCase';
 import { EditCategoryBody } from './dtos/EditCategoryBody';
 import { DeleteCategoryUseCase } from 'src/modules/category/useCases/deleteCategoryUseCase/DeleteCategoryUseCase';
+import { GetManyCategoryUseCase } from 'src/modules/category/useCases/getManyCategoryUseCase/GetManyCategoryUseCase';
 
 @Controller('categories/')
 export class CategoryController {
@@ -12,6 +22,7 @@ export class CategoryController {
     private createCategoryUseCase: CreateCategoryUseCase,
     private editCategoryUseCase: EditCategoryUseCase,
     private deleteCategoryUseCase: DeleteCategoryUseCase,
+    private getManyCategoryUseCase: GetManyCategoryUseCase,
   ) {}
 
   //REPASSAR AQUI VALINDO QUAIS USUARIOS PODEM REQUISITAR ESSE ENDPOINTS
@@ -48,5 +59,18 @@ export class CategoryController {
       categoryId,
       userId: mockUserId,
     });
+  }
+
+  @Get()
+  async getManyCategory(
+    @Query('page') page: string,
+    @Query('perPage') perPage: string,
+  ) {
+    const categories = await this.getManyCategoryUseCase.execute({
+      page,
+      perPage,
+    });
+
+    return categories.map((category) => CategoryViewModel.toHttp(category));
   }
 }

@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryRepository } from '../../repositories/CategoryRepository';
 
 interface DeleteCategoryRequest {
@@ -6,6 +6,7 @@ interface DeleteCategoryRequest {
   userId: string;
 }
 
+@Injectable()
 export class DeleteCategoryUseCase {
   constructor(private categoryRepository: CategoryRepository) {}
 
