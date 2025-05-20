@@ -33,4 +33,10 @@ export default tseslint.config(
       'no-console': 1,
     },
   },
+  {
+    files: ['**/prisma/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-call': 'off',
+    },
+  },
 );
