@@ -8,4 +8,17 @@ export class CategoryRepositoryInMemory implements CategoryRepository {
     this.categories.push(category);
     return Promise.resolve();
   }
+
+  findById(id: string): Promise<Category | null> {
+    const category = this.categories.find((category) => category.id === id);
+
+    if (!category) return Promise.resolve(null);
+
+    return Promise.resolve(category);
+  }
+
+  delete(id: string): Promise<void> {
+    this.categories = this.categories.filter((category) => category.id !== id);
+    return Promise.resolve();
+  }
 }
