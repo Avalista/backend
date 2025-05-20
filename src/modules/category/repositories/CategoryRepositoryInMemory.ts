@@ -21,4 +21,14 @@ export class CategoryRepositoryInMemory implements CategoryRepository {
     this.categories = this.categories.filter((category) => category.id !== id);
     return Promise.resolve();
   }
+
+  save(category: Category): Promise<void> {
+    const categoryIndex = this.categories.findIndex(
+      (currentCategory) => currentCategory.id === category.id,
+    );
+
+    if (categoryIndex >= 0) this.categories[categoryIndex] = category;
+
+    return Promise.resolve();
+  }
 }
