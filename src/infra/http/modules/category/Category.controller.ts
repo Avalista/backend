@@ -1,15 +1,17 @@
-import { Body, Controller, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Put } from '@nestjs/common';
 import { CreateCategoryUseCase } from 'src/modules/category/useCases/createCategoryUseCase/CreateCategoryUseCase';
 import { CreateCategoryBody } from './dtos/CreateCategoryBody';
 import { CategoryViewModel } from './viewModel/CategoryViewModel';
 import { EditCategoryUseCase } from 'src/modules/category/useCases/editCategoryUseCase/EditCategoryUseCase';
 import { EditCategoryBody } from './dtos/EditCategoryBody';
+import { DeleteCategoryUseCase } from 'src/modules/category/useCases/deleteCategoryUseCase/DeleteCategoryUseCase';
 
 @Controller('categories/')
 export class CategoryController {
   constructor(
     private createCategoryUseCase: CreateCategoryUseCase,
     private editCategoryUseCase: EditCategoryUseCase,
+    private deleteCategoryUseCase: DeleteCategoryUseCase,
   ) {}
 
   //REPASSAR AQUI VALINDO QUAIS USUARIOS PODEM REQUISITAR ESSE ENDPOINTS
@@ -35,6 +37,15 @@ export class CategoryController {
       categoryId,
       name,
       color,
+      userId: mockUserId,
+    });
+  }
+
+  @Delete(':id')
+  async deletCategory(@Param('id') categoryId: string) {
+    const mockUserId = '0';
+    await this.deleteCategoryUseCase.execute({
+      categoryId,
       userId: mockUserId,
     });
   }
