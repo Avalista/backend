@@ -9,11 +9,12 @@ datasource db {
 }
 
 model Evaluator {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
-  avatar   String
+  id            String  @id @default(uuid())
+  name          String
+  email         String  @unique
+  password      String
+  avatar        String
+  isSystemAdmin Boolean @default(false)
 
   projectMemberships ProjectMembership[]
   evaluations        Evaluation[]
@@ -21,11 +22,12 @@ model Evaluator {
 }
 
 model Project {
-  id   String @id @default(uuid())
-  name String
+  id          String @id @default(uuid())
+  name        String
+  description String
 
   projectMemberships ProjectMembership[]
-  screens            Screen[]
+  flows              Flow[]
   evaluations        Evaluation[]
   finalEvaluation    FinalEvaluation?
 }
@@ -35,11 +37,19 @@ model ProjectMembership {
   admin    Boolean
   joinedAt DateTime
 
-  user        Evaluator @relation(fields: [evaluatorId], references: [id])
+  evaluator   Evaluator @relation(fields: [evaluatorId], references: [id])
   evaluatorId String
 
   project   Project @relation(fields: [projectId], references: [id])
   projectId String
+}
+
+model Flow {
+  id        String   @id @default(uuid())
+  name      String
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId String
+  screens   Screen[]
 }
 
 model Screen {
@@ -47,8 +57,8 @@ model Screen {
   title      String
   screenshot String
 
-  project   Project @relation(fields: [projectId], references: [id])
-  projectId String
+  flow   Flow?   @relation(fields: [flowId], references: [id])
+  flowId String?
 }
 
 model Evaluation {
@@ -67,7 +77,7 @@ model Evaluation {
 model Problem {
   id                     String   @id @default(uuid())
   description            String
-  screenshot             String
+  screenshot             String[]
   improvementSuggestions String
   severity               Severity
   effort                 Effort
@@ -77,15 +87,14 @@ model Problem {
   evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
   evaluationId String
 
-  heuristic   Heuristic @relation(fields: [heuristicId], references: [id])
-  heuristicId String
-
-  finalProblem FinalProblem?
+  heuristic    Heuristic      @relation(fields: [heuristicId], references: [id])
+  heuristicId  String
+  FinalProblem FinalProblem[]
 }
 
 model FinalEvaluation {
   id        String   @id @default(uuid())
-  createdAt DateTime
+  createdAt DateTime @default(now())
 
   project   Project @relation(fields: [projectId], references: [id])
   projectId String  @unique
@@ -94,14 +103,20 @@ model FinalEvaluation {
 }
 
 model FinalProblem {
-  id       String @id @default(uuid())
-  comments String
+  id                     String   @id @default(uuid())
+  description            String
+  screenshot             String[]
+  improvementSuggestions String
+  severity               Severity
+  effort                 Effort
+  priority               Boolean
+  comments               String
+
+  originalProblem   Problem? @relation(fields: [originalProblemId], references: [id])
+  originalProblemId String?
 
   finalEvaluation   FinalEvaluation @relation(fields: [finalEvaluationId], references: [id])
   finalEvaluationId String
-
-  problem   Problem @relation(fields: [problemId], references: [id])
-  problemId String  @unique
 }
 
 model Heuristic {
