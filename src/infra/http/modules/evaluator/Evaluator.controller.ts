@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { CreateEvaluatorUseCase } from 'src/modules/evaluator/useCases/createEvaluatorUseCase/CreateEvaluatorUseCase';
 import { CreateEvaluatorBody } from './dtos/createEvaluatorBody';
 import { EvaluatorViewModel } from './viewModel/EvaluatorViewModel';
@@ -9,11 +9,7 @@ export class EvaluatorController {
 
   @Post()
   async createEvaluator(@Body() body: CreateEvaluatorBody) {
-    const { name, email, password, passwordConfirm, avatar } = body;
-
-    if (password !== passwordConfirm) {
-      throw new BadRequestException('passwordConfirm must match password');
-    }
+    const { name, email, password, avatar } = body;
 
     const evaluator = await this.createEvaluatorUseCase.execute({
       name,

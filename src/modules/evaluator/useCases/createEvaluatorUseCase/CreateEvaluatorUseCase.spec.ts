@@ -34,11 +34,11 @@ describe('Create Evaluator', () => {
       password: evaluatorPasswordWithoutEncryption,
     });
 
-    const userHasPassowrdEncrypted = await compare(
+    const userHasPasswordEncrypted = await compare(
       evaluatorPasswordWithoutEncryption,
       evaluator.password,
     );
 
-    expect(userHasPassowrdEncrypted).toBeTruthy();
+    expect(userHasPasswordEncrypted).toBeTruthy();
   });
 });
