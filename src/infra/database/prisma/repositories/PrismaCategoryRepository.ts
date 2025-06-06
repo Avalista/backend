@@ -1,7 +1,7 @@
 import { Category } from 'src/modules/category/entities/Category';
 import { CategoryRepository } from 'src/modules/category/repositories/CategoryRepository';
 import { PrismaService } from '../prisma.service';
-import { PrismaCategoryMapper } from '../mappers/PrismaCategoryMappers';
+import { PrismaCategoryMapper } from '../mappers/PrismaCategoryMapper';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
