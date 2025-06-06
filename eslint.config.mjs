@@ -31,6 +31,7 @@ export default tseslint.config(
       '@typescript-eslint/no-floating-promises': 'warn',
       '@typescript-eslint/no-unsafe-argument': 'warn',
       'no-console': 1,
+      "@typescript-eslint/no-deprecated": "warn"
     },
   },
   {
