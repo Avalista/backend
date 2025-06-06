@@ -5,7 +5,7 @@ interface UserSchema {
   name: string;
   email: string;
   password: string;
-  avatar?: string;
+  avatar: string;
   isSystemAdmin: boolean;
 }
 
@@ -14,11 +14,12 @@ export class Evaluator {
   private _id: string;
 
   constructor(
-    props: Replace<UserSchema, { isSystemAdmin?: boolean }>,
+    props: Replace<UserSchema, { isSystemAdmin?: boolean; avatar?: string }>,
     id?: string,
   ) {
     this.props = {
       ...props,
+      avatar: props.avatar ?? '',
       isSystemAdmin: false,
     };
     this._id = id ?? randomUUID();
@@ -52,7 +53,7 @@ export class Evaluator {
     this.props.password = password;
   }
 
-  get avatar(): string | undefined {
+  get avatar(): string {
     return this.props.avatar;
   }
 
