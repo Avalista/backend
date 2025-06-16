@@ -20,4 +20,23 @@ export class PrismaProjectMembershipRepository
       },
     });
   }
+
+  async findByEvaluatorId(evaluatorId: string): Promise<ProjectMembership[]> {
+    const records = await this.prisma.projectMembership.findMany({
+      where: { evaluatorId },
+    });
+
+    return records.map(
+      (m) =>
+        new ProjectMembership(
+          {
+            evaluatorId: m.evaluatorId,
+            projectId: m.projectId,
+            admin: m.admin,
+            joinedAt: m.joinedAt,
+          },
+          m.id,
+        ),
+    );
+  }
 }
