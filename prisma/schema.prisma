@@ -16,8 +16,10 @@ model Evaluator {
   isSystemAdmin Boolean @default(false)
 
   projectMemberships ProjectMembership[]
-  evaluations        Evaluation[]
-  userBadgeAwards    UserBadgeAward[]
+  evaluationSession  EvaluationSession[]
+  badgeAwards        UserBadgeAward[]
+  categories         Category[]
+  heuristic          Heuristic[]
 }
 
 model Project {
@@ -25,10 +27,10 @@ model Project {
   name        String
   description String
 
-  projectMemberships ProjectMembership[]
-  flows              Flow[]
-  evaluations        Evaluation[]
-  finalEvaluation    FinalEvaluation?
+  memberships     ProjectMembership[]
+  screens         Screen[]
+  sessions        EvaluationSession[]
+  finalEvaluation FinalEvaluation?
 }
 
 model ProjectMembership {
@@ -43,26 +45,23 @@ model ProjectMembership {
   projectId String
 }
 
-model Flow {
-  id        String   @id @default(uuid())
-  name      String
-  project   Project  @relation(fields: [projectId], references: [id])
-  projectId String
-  screens   Screen[]
-}
-
 model Screen {
-  id         String @id @default(uuid())
-  title      String
-  screenshot String
+  id          String @id @default(uuid())
+  title       String
+  description String
+  screenshot  String
 
-  flow   Flow?   @relation(fields: [flowId], references: [id])
-  flowId String?
+  project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  evaluationItems EvaluationItem[]
 }
 
-model Evaluation {
-  id        String   @id @default(uuid())
-  updatedAt DateTime
+model EvaluationSession {
+  id         String                  @id @default(uuid())
+  startedAt  DateTime                @default(now())
+  finishedAt DateTime?
+  status     EvaluationSessionStatus
 
   evaluator   Evaluator @relation(fields: [evaluatorId], references: [id])
   evaluatorId String
@@ -70,25 +69,45 @@ model Evaluation {
   project   Project @relation(fields: [projectId], references: [id])
   projectId String
 
+  evaluationItems EvaluationItem[]
+}
+
+model EvaluationItem {
+  id         String               @id @default(uuid())
+  status     EvaluationItemStatus
+  reviewedAt DateTime?
+
+  session   EvaluationSession @relation(fields: [sessionId], references: [id])
+  sessionId String
+
+  screen   Screen @relation(fields: [screenId], references: [id])
+  screenId String
+
+  heuristic   Heuristic @relation(fields: [heuristicId], references: [id])
+  heuristicId String
+
   problems Problem[]
 }
 
 model Problem {
-  id                     String   @id @default(uuid())
+  id                     String    @id @default(uuid())
   description            String
   screenshot             String[]
   improvementSuggestions String
   severity               Severity
   effort                 Effort
-  resolvedAt             DateTime
-  priority               Boolean
+  resolvedAt             DateTime?
+  priority               Boolean   @default(false)
 
-  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
-  evaluationId String
+  evaluationItem   EvaluationItem @relation(fields: [evaluationItemId], references: [id])
+  evaluationItemId String
 
-  heuristic    Heuristic      @relation(fields: [heuristicId], references: [id])
-  heuristicId  String
-  FinalProblem FinalProblem[]
+  finalEvaluation   FinalEvaluation? @relation(fields: [finalEvaluationId], references: [id])
+  finalEvaluationId String?
+
+  originalProblem   Problem?  @relation("ProblemVersion", fields: [originalProblemId], references: [id])
+  originalProblemId String?
+  derivedProblems   Problem[] @relation("ProblemVersion")
 }
 
 model FinalEvaluation {
@@ -98,45 +117,48 @@ model FinalEvaluation {
   project   Project @relation(fields: [projectId], references: [id])
   projectId String  @unique
 
-  finalProblems FinalProblem[]
-}
-
-model FinalProblem {
-  id                     String   @id @default(uuid())
-  description            String
-  screenshot             String[]
-  improvementSuggestions String
-  severity               Severity
-  effort                 Effort
-  priority               Boolean
-  comments               String
-
-  originalProblem   Problem? @relation(fields: [originalProblemId], references: [id])
-  originalProblemId String?
-
-  finalEvaluation   FinalEvaluation @relation(fields: [finalEvaluationId], references: [id])
-  finalEvaluationId String
+  problems Problem[]
 }
 
 model Heuristic {
-  id          String @id @default(uuid())
+  id          String           @id @default(uuid())
   code        String
   name        String
   description String
+  status      SuggestionStatus
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String
 
-  problems Problem[]
-  examples Example[]
+  author   Evaluator @relation(fields: [authorId], references: [id])
+  authorId String
+
+  heuristicLists HeuristicList[]
+
+  examples        Example[]
+  evaluationItems EvaluationItem[]
 }
 
 model Category {
-  id    String @id @default(uuid())
-  name  String
-  color String
+  id     String           @id @default(uuid())
+  name   String
+  color  String
+  status SuggestionStatus
 
-  heuristic Heuristic[]
+  author   Evaluator @relation(fields: [authorId], references: [id])
+  authorId String
+
+  heuristic      Heuristic[]
+  heuristicLists HeuristicList[]
+}
+
+model HeuristicList {
+  id          String    @id @default(uuid())
+  name        String
+  publishedAt DateTime?
+
+  heuristics Heuristic[]
+  categories Category[]
 }
 
 model Example {
@@ -155,7 +177,7 @@ model Badge {
   threshold   Int
   criteria    BadgeCriteria
 
-  userBadgeAwards UserBadgeAward[]
+  awardedTo UserBadgeAward[]
 }
 
 model UserBadgeAward {
@@ -167,11 +189,6 @@ model UserBadgeAward {
 
   badge   Badge  @relation(fields: [badgeId], references: [id])
   badgeId String
-}
-
-enum Role {
-  ADMIN
-  EVALUATOR
 }
 
 enum Severity {
@@ -190,4 +207,21 @@ enum BadgeCriteria {
   TOTAL_VIOLATIONS
   CATEGORY_VIOLATIONS
   DISTINCT_CATEGORIES
+}
+
+enum SuggestionStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EvaluationItemStatus {
+  NOT_REVIEWED
+  REVIEWED_OK
+  REVIEWED_ISSUE
+}
+
+enum EvaluationSessionStatus {
+  IN_PROGRESS
+  COMPLETED
 }
