@@ -10,4 +10,12 @@ export class ProjectMembershipRepositoryInMemory
     this.memberships.push(membership);
     return Promise.resolve();
   }
+
+  async findByEvaluatorId(evaluatorId: string): Promise<ProjectMembership[]> {
+    return Promise.resolve(
+      this.memberships.filter(
+        (membership) => membership.evaluatorId === evaluatorId,
+      ),
+    );
+  }
 }
