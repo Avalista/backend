@@ -4,6 +4,10 @@ import { CategoryRepository } from 'src/modules/category/repositories/CategoryRe
 import { PrismaCategoryRepository } from './prisma/repositories/PrismaCategoryRepository';
 import { EvaluatorRepository } from 'src/modules/evaluator/repositories/EvaluatorRepository';
 import { PrismaEvaluatorRepository } from './prisma/repositories/PrismaEvaluatorRepository';
+import { ProjectRepository } from 'src/modules/project/repositories/ProjectRepository';
+import { ProjectMembershipRepository } from 'src/modules/projectMembership/repositories/ProjectMembershipRepository';
+import { PrismaProjectRepository } from './prisma/repositories/PrismaProjectRepository';
+import { PrismaProjectMembershipRepository } from './prisma/repositories/PrismaProjectMembershipRepository';
 
 @Module({
   providers: [
@@ -16,7 +20,20 @@ import { PrismaEvaluatorRepository } from './prisma/repositories/PrismaEvaluator
       provide: EvaluatorRepository,
       useClass: PrismaEvaluatorRepository,
     },
+    {
+      provide: ProjectRepository,
+      useClass: PrismaProjectRepository,
+    },
+    {
+      provide: ProjectMembershipRepository,
+      useClass: PrismaProjectMembershipRepository,
+    },
   ],
-  exports: [CategoryRepository, EvaluatorRepository],
+  exports: [
+    CategoryRepository,
+    EvaluatorRepository,
+    ProjectRepository,
+    ProjectMembershipRepository,
+  ],
 })
 export class DatabaseModule {}
