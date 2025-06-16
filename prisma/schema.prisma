@@ -216,7 +216,7 @@ enum SuggestionStatus {
 }
 
 enum EvaluationItemStatus {
-  NOT_REVIWED
+  NOT_REVIEWED
   REVIEWED_OK
   REVIEWED_ISSUE
 }
