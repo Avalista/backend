@@ -12,7 +12,10 @@ describe('GetMyProjectUseCase', () => {
   beforeEach(() => {
     projectRepositoryInMemory = new ProjectRepositoryInMemory();
     membershipRepositoryInMemory = new ProjectMembershipRepositoryInMemory();
-    getMyProjectUseCase = new GetMyProjectsUseCase(projectRepositoryInMemory);
+    getMyProjectUseCase = new GetMyProjectsUseCase(
+      projectRepositoryInMemory,
+      membershipRepositoryInMemory,
+    );
   });
 
   it('Should return projects where evaluator is a member', async () => {

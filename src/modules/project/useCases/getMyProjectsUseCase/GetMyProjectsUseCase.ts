@@ -1,5 +1,5 @@
 import { Project } from '../../entities/Project';
-import { ProjectMembershipRepository } from 'src/modules/projectMembership/repositories/ProjectMembershipRepository';
+import { ProjectMembershipRepository } from '../../../projectMembership/repositories/ProjectMembershipRepository';
 import { ProjectRepository } from '../../repositories/ProjectRepository';
 import { FindProjectsByEvaluator } from '../../interfaces/FindProjects';
 import { Injectable } from '@nestjs/common';
