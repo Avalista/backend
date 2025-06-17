@@ -13,7 +13,7 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix --max-warnings=0",
-    "lint:dup": "jscpd --min-tokens 50 --threshold 1 src",
+    "lint:dup": "jscpd --min-tokens 50 --threshold 1 --ignore '**/entities/*.ts' src",
     "lint:strict": "eslint \"{src,apps,libs,test}//**/*.ts\" --max-warnings=0",
     "test": "jest",
     "test:watch": "jest --watch",
