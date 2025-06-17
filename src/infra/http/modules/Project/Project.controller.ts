@@ -1,15 +1,25 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateProjectBody } from './dtos/CreateProjectBody';
 import { ProjectViewModel } from './viewModel/ProjectViewModel';
 import { CreateProjectUseCase } from 'src/modules/project/useCases/createProjectUseCase/createProjectUseCase';
 import { GetMyProjectsUseCase } from 'src/modules/project/useCases/getMyProjectsUseCase/GetMyProjectsUseCase';
 import { GetMyProjectsQuery } from './dtos/GetProjectsQuery';
+import { GetProjectDetailsUseCase } from 'src/modules/project/useCases/getProjectUseCase/GetProjectDetailUseCase';
 
 @Controller('projects')
 export class ProjectController {
   constructor(
     private createProjectUseCase: CreateProjectUseCase,
     private getEvaluatorProjectsUseCase: GetMyProjectsUseCase,
+    private getProjectDetailsUseCase: GetProjectDetailsUseCase,
   ) {}
 
   @Post()
@@ -36,5 +46,20 @@ export class ProjectController {
     });
 
     return projects.map((project) => ProjectViewModel.toHttp(project));
+  }
+
+  @Get(':id')
+  async getProjectDetails(@Param('id') id: string) {
+    const evaluatorId = '594295ae-f2c0-4fff-9d93-b80679518ef5'; // substituir pelo real ID do avaliador autenticado
+    const project = await this.getProjectDetailsUseCase.execute(
+      id,
+      evaluatorId,
+    );
+
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+
+    return ProjectViewModel.toHttp(project);
   }
 }

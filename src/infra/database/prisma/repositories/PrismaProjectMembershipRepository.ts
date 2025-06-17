@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { ProjectMembershipRepository } from 'src/modules/projectMembership/repositories/ProjectMembershipRepository';
 import { ProjectMembership } from 'src/modules/projectMembership/entities/ProjectMembership';
+import { PrismaProjectMembershipMapper } from '../mappers/PrismaProjectMembershipMapper';
 
 @Injectable()
 export class PrismaProjectMembershipRepository
@@ -10,14 +11,9 @@ export class PrismaProjectMembershipRepository
   constructor(private prisma: PrismaService) {}
 
   async create(membership: ProjectMembership): Promise<void> {
+    const prismaData = PrismaProjectMembershipMapper.toPrisma(membership);
     await this.prisma.projectMembership.create({
-      data: {
-        id: membership.id,
-        admin: membership.admin,
-        joinedAt: membership.joinedAt,
-        evaluatorId: membership.evaluatorId,
-        projectId: membership.projectId,
-      },
+      data: prismaData,
     });
   }
 
@@ -26,17 +22,28 @@ export class PrismaProjectMembershipRepository
       where: { evaluatorId },
     });
 
-    return records.map(
-      (m) =>
-        new ProjectMembership(
-          {
-            evaluatorId: m.evaluatorId,
-            projectId: m.projectId,
-            admin: m.admin,
-            joinedAt: m.joinedAt,
-          },
-          m.id,
-        ),
-    );
+    return records.map((m) => PrismaProjectMembershipMapper.toDomain(m));
+  }
+
+  async findByProjectIdAndEvaluatorId(
+    projectId: string,
+    evaluatorId: string,
+  ): Promise<ProjectMembership | null> {
+    const membership = await this.prisma.projectMembership.findFirst({
+      where: {
+        projectId,
+        evaluatorId,
+      },
+      include: {
+        evaluator: true,
+        project: true,
+      },
+    });
+
+    if (!membership) {
+      return null;
+    }
+
+    return PrismaProjectMembershipMapper.toDomain(membership);
   }
 }

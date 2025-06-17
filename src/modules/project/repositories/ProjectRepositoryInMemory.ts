@@ -32,4 +32,9 @@ export class ProjectRepositoryInMemory implements ProjectRepository {
 
     return Promise.resolve(result);
   }
+
+  findById(id: string): Promise<Project | null> {
+    const project = this.projects.find((project) => project.id === id);
+    return Promise.resolve(project || null);
+  }
 }

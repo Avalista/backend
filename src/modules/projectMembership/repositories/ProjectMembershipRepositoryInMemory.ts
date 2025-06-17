@@ -18,4 +18,15 @@ export class ProjectMembershipRepositoryInMemory
       ),
     );
   }
+
+  async findByProjectIdAndEvaluatorId(
+    projectId: string,
+    evaluatorId: string,
+  ): Promise<ProjectMembership | null> {
+    const membership = this.memberships.find(
+      (m) => m.projectId === projectId && m.evaluatorId === evaluatorId,
+    );
+
+    return Promise.resolve(membership || null);
+  }
 }
