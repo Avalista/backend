@@ -1,19 +1,19 @@
 import { ProjectRepositoryInMemory } from '../../repositories/ProjectRepositoryInMemory';
 import { ProjectMembershipRepositoryInMemory } from '../../../projectMembership/repositories/ProjectMembershipRepositoryInMemory';
-import { GetProjectDetailsUseCase } from './GetProjectDetailUseCase';
+import { GetProjectDetailUseCase } from './GetProjectDetailUseCase';
 import { makeProject } from '../../factory/ProjectFactory';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { ProjectMembership } from '../../../projectMembership/entities/ProjectMembership';
 
-let getProjectDetailsUseCase: GetProjectDetailsUseCase;
+let getProjectDetailUseCase: GetProjectDetailUseCase;
 let projectRepositoryInMemory: ProjectRepositoryInMemory;
 let membershipRepositoryInMemory: ProjectMembershipRepositoryInMemory;
 
-describe('GetProjectDetailsUseCase', () => {
+describe('GetProjectDetailUseCase', () => {
   beforeEach(() => {
     projectRepositoryInMemory = new ProjectRepositoryInMemory();
     membershipRepositoryInMemory = new ProjectMembershipRepositoryInMemory();
-    getProjectDetailsUseCase = new GetProjectDetailsUseCase(
+    getProjectDetailUseCase = new GetProjectDetailUseCase(
       projectRepositoryInMemory,
       membershipRepositoryInMemory,
     );
@@ -24,7 +24,7 @@ describe('GetProjectDetailsUseCase', () => {
     const evaluatorId = 'evaluator-123';
 
     await expect(
-      getProjectDetailsUseCase.execute(projectId, evaluatorId),
+      getProjectDetailUseCase.execute(projectId, evaluatorId),
     ).rejects.toThrow(new NotFoundException('Project not found'));
   });
 
@@ -36,7 +36,7 @@ describe('GetProjectDetailsUseCase', () => {
     await projectRepositoryInMemory.create(project);
 
     await expect(
-      getProjectDetailsUseCase.execute(projectId, evaluatorId),
+      getProjectDetailUseCase.execute(projectId, evaluatorId),
     ).rejects.toThrow(
       new ForbiddenException(
         'You do not have permission to access or modify this project membership.',
@@ -64,7 +64,7 @@ describe('GetProjectDetailsUseCase', () => {
     );
 
     await expect(
-      getProjectDetailsUseCase.execute(projectId, evaluatorId),
+      getProjectDetailUseCase.execute(projectId, evaluatorId),
     ).rejects.toThrow(
       new ForbiddenException(
         'You do not have permission to access or modify this project membership.',
@@ -88,7 +88,7 @@ describe('GetProjectDetailsUseCase', () => {
       }),
     );
 
-    const result = await getProjectDetailsUseCase.execute(
+    const result = await getProjectDetailUseCase.execute(
       projectId,
       evaluatorId,
     );

@@ -1,25 +1,17 @@
-import {
-  Body,
-  Controller,
-  Get,
-  NotFoundException,
-  Param,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CreateProjectBody } from './dtos/CreateProjectBody';
 import { ProjectViewModel } from './viewModel/ProjectViewModel';
 import { CreateProjectUseCase } from 'src/modules/project/useCases/createProjectUseCase/createProjectUseCase';
 import { GetMyProjectsUseCase } from 'src/modules/project/useCases/getMyProjectsUseCase/GetMyProjectsUseCase';
 import { GetMyProjectsQuery } from './dtos/GetProjectsQuery';
-import { GetProjectDetailsUseCase } from 'src/modules/project/useCases/getProjectUseCase/GetProjectDetailUseCase';
+import { GetProjectDetailUseCase } from 'src/modules/project/useCases/getProjectDetailUseCase/GetProjectDetailUseCase';
 
 @Controller('projects')
 export class ProjectController {
   constructor(
     private createProjectUseCase: CreateProjectUseCase,
     private getEvaluatorProjectsUseCase: GetMyProjectsUseCase,
-    private getProjectDetailsUseCase: GetProjectDetailsUseCase,
+    private getProjectDetailUseCase: GetProjectDetailUseCase,
   ) {}
 
   @Post()
@@ -51,14 +43,7 @@ export class ProjectController {
   @Get(':id')
   async getProjectDetails(@Param('id') id: string) {
     const evaluatorId = '594295ae-f2c0-4fff-9d93-b80679518ef5'; // substituir pelo real ID do avaliador autenticado
-    const project = await this.getProjectDetailsUseCase.execute(
-      id,
-      evaluatorId,
-    );
-
-    if (!project) {
-      throw new NotFoundException('Project not found');
-    }
+    const project = await this.getProjectDetailUseCase.execute(id, evaluatorId);
 
     return ProjectViewModel.toHttp(project);
   }

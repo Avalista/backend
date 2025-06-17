@@ -8,7 +8,7 @@ import { Project } from '../../entities/Project';
 import { ProjectMembershipRepository } from '../../../projectMembership/repositories/ProjectMembershipRepository';
 
 @Injectable()
-export class GetProjectDetailsUseCase {
+export class GetProjectDetailUseCase {
   constructor(
     private projectRepository: ProjectRepository,
     private projectMembershipRepository: ProjectMembershipRepository,
