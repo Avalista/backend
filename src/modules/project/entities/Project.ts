@@ -32,9 +32,9 @@ export class Project {
     this.props = {
       ...props,
       memberships: props.memberships ?? [],
-      screens: props.screens ?? [], // Inicializando screens com um array vazio
-      sessions: props.sessions ?? [], // Inicializando sessions com um array vazio
-      finalEvaluation: props.finalEvaluation ?? null, // Inicializando finalEvaluation com null
+      screens: props.screens ?? [],
+      sessions: props.sessions ?? [],
+      finalEvaluation: props.finalEvaluation ?? null,
     };
     this._id = id ?? randomUUID();
   }
