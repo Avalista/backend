@@ -9,4 +9,5 @@ export interface FindManyByIdsParams {
 export abstract class ProjectRepository {
   abstract create(project: Project): Promise<void>;
   abstract findManyByIds(params: FindManyByIdsParams): Promise<Project[]>;
+  abstract findById(id: string): Promise<Project | null>;
 }

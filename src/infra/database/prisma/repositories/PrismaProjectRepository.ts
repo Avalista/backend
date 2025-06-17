@@ -4,6 +4,7 @@ import { ProjectRepository } from 'src/modules/project/repositories/ProjectRepos
 import { PrismaService } from '../prisma.service';
 import { PrismaProjectMapper } from '../mappers/PrismaProjectMapper';
 import { ProjectMembership } from 'src/modules/projectMembership/entities/ProjectMembership';
+import { PrismaProjectMembershipMapper } from '../mappers/PrismaProjectMembershipMapper';
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepository {
@@ -58,6 +59,55 @@ export class PrismaProjectRepository implements ProjectRepository {
           },
           p.id,
         ),
+    );
+  }
+
+  async findById(id: string): Promise<Project | null> {
+    const project = await this.prisma.project.findUnique({
+      where: { id },
+      include: {
+        memberships: {
+          include: {
+            evaluator: true,
+          },
+        },
+        screens: true,
+        sessions: true,
+        finalEvaluation: true,
+      },
+    });
+
+    if (!project) {
+      return null;
+    }
+
+    return new Project(
+      {
+        name: project.name,
+        description: project.description,
+        memberships: project.memberships.map((m) =>
+          PrismaProjectMembershipMapper.toDomain(m),
+        ),
+        screens: project.screens.map((s) => ({
+          id: s.id,
+          title: s.title,
+          description: s.description,
+          screenshot: s.screenshot,
+        })),
+        sessions: project.sessions.map((s) => ({
+          id: s.id,
+          startedAt: s.startedAt,
+          finishedAt: s.finishedAt,
+          status: s.status,
+        })),
+        finalEvaluation: project.finalEvaluation
+          ? {
+              id: project.finalEvaluation.id,
+              createdAt: project.finalEvaluation.createdAt,
+            }
+          : null,
+      },
+      project.id,
     );
   }
 }
