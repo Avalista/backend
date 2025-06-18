@@ -8,6 +8,8 @@ import { ProjectRepository } from 'src/modules/project/repositories/ProjectRepos
 import { ProjectMembershipRepository } from 'src/modules/projectMembership/repositories/ProjectMembershipRepository';
 import { PrismaProjectRepository } from './prisma/repositories/PrismaProjectRepository';
 import { PrismaProjectMembershipRepository } from './prisma/repositories/PrismaProjectMembershipRepository';
+import { ScreenRepository } from 'src/modules/screen/repositories/ScreenRepository';
+import { PrismaScreenRepository } from './prisma/repositories/PrismaScreenRepository';
 
 @Module({
   providers: [
@@ -28,12 +30,17 @@ import { PrismaProjectMembershipRepository } from './prisma/repositories/PrismaP
       provide: ProjectMembershipRepository,
       useClass: PrismaProjectMembershipRepository,
     },
+    {
+      provide: ScreenRepository,
+      useClass: PrismaScreenRepository,
+    },
   ],
   exports: [
     CategoryRepository,
     EvaluatorRepository,
     ProjectRepository,
     ProjectMembershipRepository,
+    ScreenRepository,
   ],
 })
 export class DatabaseModule {}
