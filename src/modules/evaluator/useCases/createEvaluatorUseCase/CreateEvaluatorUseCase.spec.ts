@@ -43,7 +43,7 @@ describe('Create Evaluator', () => {
     expect(userHasPasswordEncrypted).toBeTruthy();
   });
 
-  it('Should be able to throw error when an evaluator with the same email already exists', async () => {
+  it('should throw ConflictException if email already exists', async () => {
     await createEvaluatorUseCase.execute({
       email: 'email@email.com',
       name: 'evaluator1',

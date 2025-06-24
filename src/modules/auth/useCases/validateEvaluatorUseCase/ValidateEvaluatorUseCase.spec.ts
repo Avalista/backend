@@ -32,7 +32,7 @@ describe('Valide Evaluator', () => {
     expect(result).toEqual(evaluator);
   });
 
-  it('Should be able to throw error when the credental incorrect', async () => {
+  it('Should be able to throw error when the credentials are incorrect', async () => {
     const evaluatorPassowordWithoutEncryption = '123123';
 
     const evaluator = makeEvaluator({
