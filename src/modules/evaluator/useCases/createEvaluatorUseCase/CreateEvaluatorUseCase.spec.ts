@@ -1,6 +1,7 @@
 import { compare } from 'bcrypt';
 import { EvaluatorRepositoryInMemory } from '../../repositories/EvaluatorRepositoryInMemory';
 import { CreateEvaluatorUseCase } from './CreateEvaluatorUseCase';
+import { ConflictException } from '@nestjs/common';
 
 let evaluatorRepositoryInMemory: EvaluatorRepositoryInMemory;
 let createEvaluatorUseCase: CreateEvaluatorUseCase;
@@ -40,5 +41,21 @@ describe('Create Evaluator', () => {
     );
 
     expect(userHasPasswordEncrypted).toBeTruthy();
+  });
+
+  it('should throw ConflictException if email already exists', async () => {
+    await createEvaluatorUseCase.execute({
+      email: 'email@email.com',
+      name: 'evaluator1',
+      password: 'password',
+    });
+
+    await expect(
+      createEvaluatorUseCase.execute({
+        email: 'email@email.com',
+        name: 'evaluator2',
+        password: 'password2',
+      }),
+    ).rejects.toThrow(ConflictException);
   });
 });

@@ -20,7 +20,7 @@ export class Evaluator {
     this.props = {
       ...props,
       avatar: props.avatar ?? '',
-      isSystemAdmin: false,
+      isSystemAdmin: props.isSystemAdmin ?? false,
     };
     this._id = id ?? randomUUID();
   }
