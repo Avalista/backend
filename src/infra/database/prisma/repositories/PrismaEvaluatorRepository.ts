@@ -13,4 +13,16 @@ export class PrismaEvaluatorRepository implements EvaluatorRepository {
 
     await this.prisma.evaluator.create({ data: evaluatorRaw });
   }
+
+  async findByEmail(email: string): Promise<Evaluator | null> {
+    const evaluator = await this.prisma.evaluator.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!evaluator) return null;
+
+    return PrismaEvaluatorMapper.toDomain(evaluator);
+  }
 }

@@ -8,4 +8,9 @@ export class EvaluatorRepositoryInMemory implements EvaluatorRepository {
     this.evaluators.push(evaluator);
     return Promise.resolve();
   }
+
+  async findByEmail(email: string): Promise<Evaluator | null> {
+    const evaluator = this.evaluators.find((e) => e.email === email);
+    return Promise.resolve(evaluator || null);
+  }
 }

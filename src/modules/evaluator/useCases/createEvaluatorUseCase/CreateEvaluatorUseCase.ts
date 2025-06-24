@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { EvaluatorRepository } from '../../repositories/EvaluatorRepository';
 import { Evaluator } from '../../entities/Evaluator';
 import { hash } from 'bcrypt';
@@ -15,6 +15,12 @@ export class CreateEvaluatorUseCase {
   constructor(private evaluatorRepository: EvaluatorRepository) {}
 
   async execute({ email, name, password, avatar }: CreateEvaluatorRequest) {
+    const alreadyExistEvaluator =
+      await this.evaluatorRepository.findByEmail(email);
+
+    if (alreadyExistEvaluator)
+      throw new ConflictException('Email already registered');
+
     const evaluator = new Evaluator({
       email,
       name,

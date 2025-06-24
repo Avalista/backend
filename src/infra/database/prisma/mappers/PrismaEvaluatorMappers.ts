@@ -19,4 +19,15 @@ export class PrismaEvaluatorMapper {
       id,
     };
   }
+
+  static toDomain({
+    id,
+    name,
+    email,
+    password,
+    avatar,
+    isSystemAdmin,
+  }: EvaluatorRaw): Evaluator {
+    return new Evaluator({ name, email, password, avatar, isSystemAdmin }, id);
+  }
 }
