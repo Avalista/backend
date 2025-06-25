@@ -1,10 +1,19 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  Request,
+} from '@nestjs/common';
 import { CreateProjectBody } from './dtos/CreateProjectBody';
 import { ProjectViewModel } from './viewModel/ProjectViewModel';
 import { CreateProjectUseCase } from 'src/modules/project/useCases/createProjectUseCase/createProjectUseCase';
 import { GetMyProjectsUseCase } from 'src/modules/project/useCases/getMyProjectsUseCase/GetMyProjectsUseCase';
 import { GetMyProjectsQuery } from './dtos/GetProjectsQuery';
 import { GetProjectDetailUseCase } from 'src/modules/project/useCases/getProjectDetailUseCase/GetProjectDetailUseCase';
+import { AuthenticatedRequestModel } from '../auth/models/AuthenticatedRequestModel';
 
 @Controller('projects')
 export class ProjectController {
@@ -28,8 +37,11 @@ export class ProjectController {
   }
 
   @Get()
-  async getMyProjects(@Query() query: GetMyProjectsQuery) {
-    const evaluatorId = '594295ae-f2c0-4fff-9d93-b80679518ef5'; // substituir pelo real ID do avaliador autenticado
+  async getMyProjects(
+    @Query() query: GetMyProjectsQuery,
+    @Request() request: AuthenticatedRequestModel,
+  ) {
+    const evaluatorId = request.user.id;
 
     const projects = await this.getEvaluatorProjectsUseCase.execute({
       evaluatorId,
@@ -41,8 +53,12 @@ export class ProjectController {
   }
 
   @Get(':id')
-  async getProjectDetails(@Param('id') id: string) {
-    const evaluatorId = '594295ae-f2c0-4fff-9d93-b80679518ef5'; // substituir pelo real ID do avaliador autenticado
+  async getProjectDetails(
+    @Param('id') id: string,
+    @Request() request: AuthenticatedRequestModel,
+  ) {
+    const evaluatorId = request.user.id;
+
     const project = await this.getProjectDetailUseCase.execute(id, evaluatorId);
 
     return ProjectViewModel.toHttp(project);

@@ -29,7 +29,7 @@ export class GetProjectDetailUseCase {
 
     if (evaluatorId !== membership?.evaluatorId) {
       throw new ForbiddenException(
-        'You do not have permission to access or modify this project membership.',
+        'You do not have permission to access or modify this project',
       );
     }
 
