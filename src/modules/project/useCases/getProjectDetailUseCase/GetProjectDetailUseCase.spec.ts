@@ -40,7 +40,7 @@ describe('GetProjectDetailUseCase', () => {
       getProjectDetailUseCase.execute(projectId, evaluatorId),
     ).rejects.toThrow(
       new ForbiddenException(
-        'You do not have permission to access or modify this project membership.',
+        'You do not have permission to access or modify this project',
       ),
     );
   });
@@ -68,7 +68,7 @@ describe('GetProjectDetailUseCase', () => {
       getProjectDetailUseCase.execute(projectId, evaluatorId),
     ).rejects.toThrow(
       new ForbiddenException(
-        'You do not have permission to access or modify this project membership.',
+        'You do not have permission to access or modify this project',
       ),
     );
   });
