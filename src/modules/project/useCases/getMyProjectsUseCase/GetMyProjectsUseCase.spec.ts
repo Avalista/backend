@@ -3,6 +3,7 @@ import { ProjectMembershipRepositoryInMemory } from '../../../projectMembership/
 import { GetMyProjectsUseCase } from './GetMyProjectsUseCase';
 import { ProjectMembership } from '../../../projectMembership/entities/ProjectMembership';
 import { makeProject } from '../../factory/ProjectFactory';
+import { makeEvaluator } from 'src/modules/evaluator/factories/EvaluatorFactory';
 
 let getMyProjectUseCase: GetMyProjectsUseCase;
 let projectRepositoryInMemory: ProjectRepositoryInMemory;
@@ -20,6 +21,7 @@ describe('GetMyProjectUseCase', () => {
 
   it('Should return projects where evaluator is a member', async () => {
     const evaluatorId = 'evaluator-123';
+    const evaluator = makeEvaluator({});
 
     const project1 = makeProject({});
     const project2 = makeProject({});
@@ -31,12 +33,14 @@ describe('GetMyProjectUseCase', () => {
       new ProjectMembership({
         evaluatorId,
         projectId: project1.id,
+        evaluator,
         admin: false,
         joinedAt: new Date(),
       }),
       new ProjectMembership({
         evaluatorId,
         projectId: project2.id,
+        evaluator,
         admin: true,
         joinedAt: new Date(),
       }),

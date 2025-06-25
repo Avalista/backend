@@ -17,6 +17,10 @@ export class ProjectViewModel {
       memberships: memberships.map((m) => ({
         evaluatorId: m.evaluatorId,
         projectId: m.projectId,
+        evaluator: {
+          id: m.evaluator.id,
+          name: m.evaluator.name,
+        },
         admin: m.admin,
         joinedAt: m.joinedAt,
       })),

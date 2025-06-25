@@ -20,6 +20,7 @@ export class PrismaProjectMembershipRepository
   async findByEvaluatorId(evaluatorId: string): Promise<ProjectMembership[]> {
     const records = await this.prisma.projectMembership.findMany({
       where: { evaluatorId },
+      include: { evaluator: true },
     });
 
     return records.map((m) => PrismaProjectMembershipMapper.toDomain(m));

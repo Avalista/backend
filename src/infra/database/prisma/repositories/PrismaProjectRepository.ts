@@ -3,7 +3,6 @@ import { Project } from 'src/modules/project/entities/Project';
 import { ProjectRepository } from 'src/modules/project/repositories/ProjectRepository';
 import { PrismaService } from '../prisma.service';
 import { PrismaProjectMapper } from '../mappers/PrismaProjectMapper';
-import { ProjectMembership } from 'src/modules/projectMembership/entities/ProjectMembership';
 import { PrismaProjectMembershipMapper } from '../mappers/PrismaProjectMembershipMapper';
 
 @Injectable()
@@ -34,7 +33,14 @@ export class PrismaProjectRepository implements ProjectRepository {
             ? { name: 'desc' }
             : undefined,
       include: {
-        memberships: true,
+        memberships: {
+          include: {
+            evaluator: true,
+          },
+        },
+        screens: true,
+        sessions: true,
+        finalEvaluation: true,
       },
     });
 
@@ -44,18 +50,27 @@ export class PrismaProjectRepository implements ProjectRepository {
           {
             name: p.name,
             description: p.description,
-            memberships: p.memberships.map(
-              (m) =>
-                new ProjectMembership(
-                  {
-                    evaluatorId: m.evaluatorId,
-                    projectId: m.projectId,
-                    joinedAt: m.joinedAt,
-                    admin: m.admin,
-                  },
-                  m.id,
-                ),
+            memberships: p.memberships.map((m) =>
+              PrismaProjectMembershipMapper.toDomain(m),
             ),
+            screens: p.screens.map((s) => ({
+              id: s.id,
+              title: s.title,
+              description: s.description,
+              screenshot: s.screenshot,
+            })),
+            sessions: p.sessions.map((s) => ({
+              id: s.id,
+              startedAt: s.startedAt,
+              finishedAt: s.finishedAt,
+              status: s.status,
+            })),
+            finalEvaluation: p.finalEvaluation
+              ? {
+                  id: p.finalEvaluation.id,
+                  createdAt: p.finalEvaluation.createdAt,
+                }
+              : null,
           },
           p.id,
         ),
@@ -81,13 +96,15 @@ export class PrismaProjectRepository implements ProjectRepository {
       return null;
     }
 
+    const memberships = project.memberships.map((m) =>
+      PrismaProjectMembershipMapper.toDomain(m),
+    );
+
     return new Project(
       {
         name: project.name,
         description: project.description,
-        memberships: project.memberships.map((m) =>
-          PrismaProjectMembershipMapper.toDomain(m),
-        ),
+        memberships,
         screens: project.screens.map((s) => ({
           id: s.id,
           title: s.title,

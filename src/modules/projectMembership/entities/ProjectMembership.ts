@@ -1,10 +1,12 @@
 import { randomUUID } from 'crypto';
+import { Evaluator } from 'src/modules/evaluator/entities/Evaluator';
 
 interface ProjectMembershipProps {
   evaluatorId: string;
   projectId: string;
   admin: boolean;
   joinedAt: Date;
+  evaluator: Evaluator;
 }
 
 export class ProjectMembership {
@@ -34,5 +36,13 @@ export class ProjectMembership {
 
   get joinedAt(): Date {
     return this.props.joinedAt;
+  }
+
+  get evaluator(): Evaluator {
+    return this.props.evaluator;
+  }
+
+  set evaluator(evaluator: Evaluator) {
+    this.props.evaluator = evaluator;
   }
 }
