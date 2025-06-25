@@ -25,4 +25,16 @@ export class PrismaEvaluatorRepository implements EvaluatorRepository {
 
     return PrismaEvaluatorMapper.toDomain(evaluator);
   }
+
+  async findById(id: string): Promise<Evaluator | null> {
+    const evaluator = await this.prisma.evaluator.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!evaluator) return null;
+
+    return PrismaEvaluatorMapper.toDomain(evaluator);
+  }
 }

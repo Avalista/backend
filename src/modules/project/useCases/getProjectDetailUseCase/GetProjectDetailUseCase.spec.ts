@@ -4,6 +4,7 @@ import { GetProjectDetailUseCase } from './GetProjectDetailUseCase';
 import { makeProject } from '../../factory/ProjectFactory';
 import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { ProjectMembership } from '../../../projectMembership/entities/ProjectMembership';
+import { makeEvaluator } from 'src/modules/evaluator/factories/EvaluatorFactory';
 
 let getProjectDetailUseCase: GetProjectDetailUseCase;
 let projectRepositoryInMemory: ProjectRepositoryInMemory;
@@ -49,15 +50,15 @@ describe('GetProjectDetailUseCase', () => {
     const evaluatorId = 'evaluator-123';
     const wrongEvaluatorId = 'evaluator-456';
     const project = makeProject({ id: projectId });
+    const evaluator = makeEvaluator({});
 
-    // Adicionar o projeto no repositório
     projectRepositoryInMemory.projects.push(project);
 
-    // Adicionar membership com o evaluatorId errado
     membershipRepositoryInMemory.memberships.push(
       new ProjectMembership({
         evaluatorId: wrongEvaluatorId,
         projectId: projectId,
+        evaluator,
         admin: false,
         joinedAt: new Date(),
       }),
@@ -76,6 +77,7 @@ describe('GetProjectDetailUseCase', () => {
     const projectId = 'project-123';
     const evaluatorId = 'evaluator-123';
     const project = makeProject({ id: projectId });
+    const evaluator = makeEvaluator({});
 
     projectRepositoryInMemory.projects.push(project);
 
@@ -83,6 +85,7 @@ describe('GetProjectDetailUseCase', () => {
       new ProjectMembership({
         evaluatorId: evaluatorId,
         projectId: projectId,
+        evaluator,
         admin: false,
         joinedAt: new Date(),
       }),
