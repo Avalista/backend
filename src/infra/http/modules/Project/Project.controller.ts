@@ -14,7 +14,20 @@ import { GetMyProjectsUseCase } from 'src/modules/project/useCases/getMyProjects
 import { GetMyProjectsQuery } from './dtos/GetProjectsQuery';
 import { GetProjectDetailUseCase } from 'src/modules/project/useCases/getProjectDetailUseCase/GetProjectDetailUseCase';
 import { AuthenticatedRequestModel } from '../auth/models/AuthenticatedRequestModel';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { ProjectResponse } from './dtos/ProjectResponse';
+import { CreateProjectResponse } from './dtos/CreateProjectResponse';
+import { projectQueryParams } from './dtos/projectQueryParams';
 
+@ApiTags('Projects')
+@ApiBearerAuth()
 @Controller('projects')
 export class ProjectController {
   constructor(
@@ -24,8 +37,15 @@ export class ProjectController {
   ) {}
 
   @Post()
-  async createProject(@Body() body: CreateProjectBody) {
-    const { name, description, evaluatorId } = body;
+  @ApiOperation({ summary: 'Create a new project' })
+  @ApiBody({ type: CreateProjectBody })
+  @ApiResponse({ status: 201, type: CreateProjectResponse })
+  async createProject(
+    @Body() body: CreateProjectBody,
+    @Request() request: AuthenticatedRequestModel,
+  ) {
+    const { name, description } = body;
+    const evaluatorId = request.user.id;
 
     const project = await this.createProjectUseCase.execute({
       name,
@@ -33,10 +53,21 @@ export class ProjectController {
       evaluatorId,
     });
 
-    return ProjectViewModel.toHttp(project);
+    return {
+      id: project.id,
+      name: project.name,
+      description: project.description,
+    };
   }
 
   @Get()
+  @ApiOperation({ summary: 'List my projects' })
+  @ApiQuery(projectQueryParams.search)
+  @ApiQuery(projectQueryParams.orderBy)
+  @ApiResponse({
+    status: 200,
+    type: [ProjectResponse],
+  })
   async getMyProjects(
     @Query() query: GetMyProjectsQuery,
     @Request() request: AuthenticatedRequestModel,
@@ -53,6 +84,11 @@ export class ProjectController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Detail an specific project' })
+  @ApiResponse({
+    status: 200,
+    type: ProjectResponse,
+  })
   async getProjectDetails(
     @Param('id') id: string,
     @Request() request: AuthenticatedRequestModel,
