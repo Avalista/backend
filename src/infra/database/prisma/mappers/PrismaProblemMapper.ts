@@ -27,7 +27,7 @@ export class PrismaProblemMapper {
         severity: problemRaw.severity,
         effort: problemRaw.effort,
         priority: problemRaw.priority,
-        evaluationItemId: problemRaw.id,
+        evaluationItemId: problemRaw.evaluationItemId,
       },
       problemRaw.id,
     );
