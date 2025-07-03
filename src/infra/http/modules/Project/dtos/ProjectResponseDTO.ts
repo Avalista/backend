@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { ProjectMembershipResponse } from '../../projectMembership/dtos/projectMembershipResponse';
-import { ScreenResponse } from '../../screen/dtos/ScreenResponse';
+import { ScreenResponseDTO } from '../../screen/dtos/ScreenResponseDTO';
 import { SessionResponse } from '../../session/dtos/SessionResponse';
 import { FinalEvaluationResponse } from '../../finalEvaluation/dtos/finalEvaluationResponse';
 
-export class ProjectResponse {
+export class ProjectResponseDTO {
   @ApiProperty()
   id: string;
 
@@ -17,8 +17,8 @@ export class ProjectResponse {
   @ApiProperty({ type: [ProjectMembershipResponse] })
   memberships: ProjectMembershipResponse[];
 
-  @ApiProperty({ type: [ScreenResponse] })
-  screens: ScreenResponse[];
+  @ApiProperty({ type: [ScreenResponseDTO] })
+  screens: ScreenResponseDTO[];
 
   @ApiProperty({ type: [SessionResponse] })
   sessions: SessionResponse[];

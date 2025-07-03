@@ -7,6 +7,8 @@ import { ScreenModule } from './infra/http/modules/screen/Screen.module';
 import { AuthModule } from './infra/http/modules/auth/Auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './infra/http/modules/auth/guards/JwtAuth.guard';
+import { EvaluationSessionModule } from './infra/http/modules/evaluationSession/EvaluationSession.module';
+import { ProblemModule } from './infra/http/modules/problem/Problem.module';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { JwtAuthGuard } from './infra/http/modules/auth/guards/JwtAuth.guard';
     EvaluatorModule,
     ProjectModule,
     ScreenModule,
+    EvaluationSessionModule,
+    ProblemModule,
   ],
   controllers: [],
   providers: [

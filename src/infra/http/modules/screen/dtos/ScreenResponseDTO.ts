@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class ScreenResponse {
+export class ScreenResponseDTO {
   @ApiProperty()
   id: string;
 

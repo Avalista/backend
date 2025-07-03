@@ -10,6 +10,14 @@ import { PrismaProjectRepository } from './prisma/repositories/PrismaProjectRepo
 import { PrismaProjectMembershipRepository } from './prisma/repositories/PrismaProjectMembershipRepository';
 import { ScreenRepository } from 'src/modules/screen/repositories/ScreenRepository';
 import { PrismaScreenRepository } from './prisma/repositories/PrismaScreenRepository';
+import { HeuristicRepository } from 'src/modules/heuristic/repositories/HeuristicRepository';
+import { PrismaHeuristicRepository } from './prisma/repositories/PrismaHeuristicRepository';
+import { EvaluationItemRepository } from 'src/modules/evaluation/repositories/EvaluationItemRepository';
+import { PrismaEvaluationItemRepository } from './prisma/repositories/PrismaEvaluationItemRepository';
+import { EvaluationSessionRepository } from 'src/modules/evaluationSession/repositories/EvaluationSessionRepository';
+import { PrismaEvaluationSessionRepository } from './prisma/repositories/PrismaEvaluationSessionRepository';
+import { ProblemRepository } from 'src/modules/problem/repositories/ProblemRepository';
+import { PrismaProblemRepository } from './prisma/repositories/PrismaProblemRepository';
 
 @Module({
   providers: [
@@ -34,6 +42,22 @@ import { PrismaScreenRepository } from './prisma/repositories/PrismaScreenReposi
       provide: ScreenRepository,
       useClass: PrismaScreenRepository,
     },
+    {
+      provide: HeuristicRepository,
+      useClass: PrismaHeuristicRepository,
+    },
+    {
+      provide: EvaluationItemRepository,
+      useClass: PrismaEvaluationItemRepository,
+    },
+    {
+      provide: EvaluationSessionRepository,
+      useClass: PrismaEvaluationSessionRepository,
+    },
+    {
+      provide: ProblemRepository,
+      useClass: PrismaProblemRepository,
+    },
   ],
   exports: [
     CategoryRepository,
@@ -41,6 +65,10 @@ import { PrismaScreenRepository } from './prisma/repositories/PrismaScreenReposi
     ProjectRepository,
     ProjectMembershipRepository,
     ScreenRepository,
+    HeuristicRepository,
+    EvaluationItemRepository,
+    EvaluationSessionRepository,
+    ProblemRepository,
   ],
 })
 export class DatabaseModule {}

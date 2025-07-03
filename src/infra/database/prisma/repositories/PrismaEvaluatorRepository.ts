@@ -37,4 +37,20 @@ export class PrismaEvaluatorRepository implements EvaluatorRepository {
 
     return PrismaEvaluatorMapper.toDomain(evaluator);
   }
+
+  async findBySessionId(sessionId: string): Promise<Evaluator | null> {
+    const evaluator = await this.prisma.evaluator.findFirst({
+      where: {
+        evaluationSession: {
+          some: {
+            id: sessionId,
+          },
+        },
+      },
+    });
+
+    if (!evaluator) return null;
+
+    return PrismaEvaluatorMapper.toDomain(evaluator);
+  }
 }
