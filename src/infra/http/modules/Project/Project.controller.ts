@@ -22,7 +22,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { ProjectResponse } from './dtos/ProjectResponse';
+import { ProjectResponseDTO } from './dtos/ProjectResponseDTO';
 import { CreateProjectResponse } from './dtos/CreateProjectResponse';
 import { projectQueryParams } from './dtos/projectQueryParams';
 
@@ -66,7 +66,7 @@ export class ProjectController {
   @ApiQuery(projectQueryParams.orderBy)
   @ApiResponse({
     status: 200,
-    type: [ProjectResponse],
+    type: [ProjectResponseDTO],
   })
   async getMyProjects(
     @Query() query: GetMyProjectsQuery,
@@ -87,7 +87,7 @@ export class ProjectController {
   @ApiOperation({ summary: 'Detail an specific project' })
   @ApiResponse({
     status: 200,
-    type: ProjectResponse,
+    type: ProjectResponseDTO,
   })
   async getProjectDetails(
     @Param('id') id: string,

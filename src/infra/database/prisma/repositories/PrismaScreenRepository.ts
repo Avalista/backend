@@ -17,4 +17,12 @@ export class PrismaScreenRepository implements ScreenRepository {
     const screen = await this.prisma.screen.findUnique({ where: { id } });
     return screen ? PrismaScreenMapper.toDomain(screen) : null;
   }
+
+  async findByProjectId(projectId: string): Promise<Screen[]> {
+    const screens = await this.prisma.screen.findMany({
+      where: { projectId },
+    });
+
+    return screens.map((screen) => PrismaScreenMapper.toDomain(screen));
+  }
 }
