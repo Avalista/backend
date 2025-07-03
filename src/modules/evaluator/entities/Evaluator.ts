@@ -7,6 +7,7 @@ interface UserSchema {
   password: string;
   avatar: string;
   isSystemAdmin: boolean;
+  sessionId?: string;
 }
 
 export class Evaluator {
@@ -27,6 +28,10 @@ export class Evaluator {
 
   get id(): string {
     return this._id;
+  }
+
+  get sessionId(): string {
+    return this.sessionId;
   }
 
   get name(): string {

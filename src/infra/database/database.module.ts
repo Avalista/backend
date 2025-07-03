@@ -16,6 +16,8 @@ import { EvaluationItemRepository } from 'src/modules/evaluation/repositories/Ev
 import { PrismaEvaluationItemRepository } from './prisma/repositories/PrismaEvaluationItemRepository';
 import { EvaluationSessionRepository } from 'src/modules/evaluationSession/repositories/EvaluationSessionRepository';
 import { PrismaEvaluationSessionRepository } from './prisma/repositories/PrismaEvaluationSessionRepository';
+import { ProblemRepository } from 'src/modules/problem/repositories/ProblemRepository';
+import { PrismaProblemRepository } from './prisma/repositories/PrismaProblemRepository';
 
 @Module({
   providers: [
@@ -52,6 +54,10 @@ import { PrismaEvaluationSessionRepository } from './prisma/repositories/PrismaE
       provide: EvaluationSessionRepository,
       useClass: PrismaEvaluationSessionRepository,
     },
+    {
+      provide: ProblemRepository,
+      useClass: PrismaProblemRepository,
+    },
   ],
   exports: [
     CategoryRepository,
@@ -62,6 +68,7 @@ import { PrismaEvaluationSessionRepository } from './prisma/repositories/PrismaE
     HeuristicRepository,
     EvaluationItemRepository,
     EvaluationSessionRepository,
+    ProblemRepository,
   ],
 })
 export class DatabaseModule {}

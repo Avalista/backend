@@ -17,4 +17,20 @@ export class PrismaEvaluationItemRepository
 
     return PrismaEvaluationItemMapper.toDomain(createdItem);
   }
+
+  async getByScreenAndHeuristic(
+    screenId: string,
+    heuristicId: string,
+  ): Promise<EvaluationItem | null> {
+    const evaluationItem = await this.prisma.evaluationItem.findFirst({
+      where: {
+        screenId: screenId,
+        heuristicId: heuristicId,
+      },
+    });
+
+    return evaluationItem
+      ? PrismaEvaluationItemMapper.toDomain(evaluationItem)
+      : null;
+  }
 }
