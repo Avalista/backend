@@ -30,8 +30,8 @@ export class Evaluator {
     return this._id;
   }
 
-  get sessionId(): string {
-    return this.sessionId;
+  get sessionId(): string | undefined {
+    return this.props.sessionId;
   }
 
   get name(): string {
