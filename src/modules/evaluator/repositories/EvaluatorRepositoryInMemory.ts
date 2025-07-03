@@ -18,4 +18,10 @@ export class EvaluatorRepositoryInMemory implements EvaluatorRepository {
     const evaluator = this.evaluators.find((e) => e.id === id);
     return Promise.resolve(evaluator || null);
   }
+
+  async findBySessionId(sessionId: string): Promise<Evaluator | null> {
+    const evaluator = this.evaluators.find((e) => e.sessionId === sessionId);
+
+    return Promise.resolve(evaluator || null);
+  }
 }
