@@ -115,7 +115,7 @@ class EvaluationItemDTO {
   id: string;
 
   @ApiProperty({ description: 'Status do item de avaliação' })
-  @IsEnum(['NOT_REVIEWED', 'REVIEWED', 'IN_PROGRESS'])
+  @IsEnum(['NOT_REVIEWED', 'REVIEWED_OK', 'REVIEWED_ISSUE'])
   status: string;
 
   @ApiProperty({
