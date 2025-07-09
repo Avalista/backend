@@ -1,11 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsArray,
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { Effort, EffortEnum } from 'src/enums/Effort';
 import { Severity, SeverityEnum } from 'src/enums/Severity';
 
@@ -25,10 +19,12 @@ export class CreateProblemBody {
   @ApiProperty({ description: 'Descrição do problema' })
   description: string;
 
-  @IsArray()
-  @IsString({ each: true })
-  @ApiProperty({ description: 'Capturas de tela relacionadas', type: [String] })
-  screenshots: string[];
+  @ApiProperty({
+    description: 'Screenshot of the screen',
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
+  })
+  screenshot: Express.Multer.File[];
 
   @IsString()
   @IsNotEmpty()

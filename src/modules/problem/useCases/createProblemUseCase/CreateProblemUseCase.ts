@@ -11,13 +11,14 @@ import { EvaluationItemRepository } from 'src/modules/evaluation/repositories/Ev
 import { EvaluatorRepository } from 'src/modules/evaluator/repositories/EvaluatorRepository';
 import { EvaluationSessionRepository } from 'src/modules/evaluationSession/repositories/EvaluationSessionRepository';
 import { EvaluationSession } from 'src/modules/evaluationSession/entities/EvaluationSession';
+import { S3Service } from 'src/infra/aws/s3.service';
 
 interface CreateProblemRequest {
   evaluatorId: string;
   screenId: string;
   heuristicId: string;
   description: string;
-  screenshots: string[];
+  screenshots: Express.Multer.File[];
   improvementSuggestions: string;
   severity: Severity;
   effort: Effort;
@@ -31,6 +32,7 @@ export class CreateProblemUseCase {
     private problemRepository: ProblemRepository,
     private evaluationItemRepository: EvaluationItemRepository,
     private evaluationSessionRepository: EvaluationSessionRepository,
+    private s3Service: S3Service,
   ) {}
 
   async execute({
@@ -64,9 +66,17 @@ export class CreateProblemUseCase {
       );
     }
 
+    // PAREI AQUI, FALTA IMPORTA O S3SERVICDE LA NO MODULE
+    const screenshotUrls = await Promise.all(
+      screenshots.map(async (file) => {
+        const fileUrl = await this.s3Service.uploadFile(file);
+        return fileUrl;
+      }),
+    );
+
     const newProblem: Problem = new Problem({
       description,
-      screenshots,
+      screenshots: screenshotUrls,
       improvementSuggestions,
       severity,
       effort,
