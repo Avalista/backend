@@ -14,12 +14,14 @@ import { EvaluationSessionViewModel } from '../evaluationSession/viewModel/Evalu
 import {
   ApiBearerAuth,
   ApiBody,
+  ApiConsumes,
   ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { fileValidators } from '../fileUpload/dtos/fileValidators';
+import { EvaluationSessionViewModelDTO } from '../evaluationSession/dtos/EvaluationSessionResponseDTO';
 
 @ApiTags('Problems')
 @ApiBearerAuth()
@@ -33,7 +35,7 @@ export class ProblemController {
   @ApiResponse({
     status: 201,
     description: 'Problem successfully created',
-    type: EvaluationSessionViewModel,
+    type: EvaluationSessionViewModelDTO,
   })
   @ApiResponse({
     status: 400,
@@ -41,16 +43,17 @@ export class ProblemController {
   @ApiResponse({
     status: 401,
   })
-  @UseInterceptors(FileInterceptor('screenshots'))
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FilesInterceptor('screenshots'))
   async createProblem(
-    @Body() body: CreateProblemBody,
-    @Request() request: AuthenticatedRequestModel,
     @UploadedFiles(
       new ParseFilePipe({
         validators: fileValidators,
       }),
     )
     screenshots: Express.Multer.File[],
+    @Body() body: CreateProblemBody,
+    @Request() request: AuthenticatedRequestModel,
   ) {
     const {
       screenId,

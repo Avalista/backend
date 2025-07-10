@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   ParseFilePipe,
   Post,
@@ -23,7 +22,6 @@ export class FileUploadController {
       }),
     )
     file: Express.Multer.File,
-    @Body() body: any,
   ): Promise<{ url: string }> {
     const fileUrl = await this.uploadFileUseCase.execute(file);
     return { url: fileUrl };

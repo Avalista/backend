@@ -52,7 +52,7 @@ export class CreateProblemUseCase {
         heuristicId,
       );
 
-    if (!evaluationItem?.screenId) {
+    if (!evaluationItem?.sessionId) {
       throw new BadRequestException('Não existe uma sessão de avaliação ativa');
     }
 
@@ -66,7 +66,6 @@ export class CreateProblemUseCase {
       );
     }
 
-    // PAREI AQUI, FALTA IMPORTA O S3SERVICDE LA NO MODULE
     const screenshotUrls = await Promise.all(
       screenshots.map(async (file) => {
         const fileUrl = await this.s3Service.uploadFile(file);
