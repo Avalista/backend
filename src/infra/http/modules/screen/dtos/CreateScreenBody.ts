@@ -12,10 +12,12 @@ export class CreateScreenBody {
   @ApiProperty({ description: 'Screen description' })
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ description: 'Screen screenshot' })
-  screenshot: string;
+  @ApiProperty({
+    description: 'Screenshot of the screen',
+    type: 'string',
+    format: 'binary',
+  })
+  screenshot: Express.Multer.File;
 
   @IsUUID()
   @IsNotEmpty()
