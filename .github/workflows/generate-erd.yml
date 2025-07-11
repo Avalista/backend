@@ -2,11 +2,7 @@ name: Generate Prisma Class Diagram
 
 on:
   push:
-    paths:
-      - 'prisma/schema.prisma' # roda apenas quando os modelos são alterados
   pull_request:
-    paths:
-      - 'prisma/schema.prisma'
   workflow_dispatch: # permite rodar manualmente
 
 jobs:
