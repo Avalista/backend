@@ -8,7 +8,8 @@ on:
 jobs:
   generate-erd:
     runs-on: ubuntu-latest
-    container: ghcr.io/puppeteer/puppeteer:latest
+    permissions:
+      security-events: write
 
     steps:
       - name: Checkout repository
@@ -19,8 +20,20 @@ jobs:
         with:
           node-version: '22'
 
+      - name: Install system dependencies for Puppeteer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 \
+            libxss1 \
+            libasound2 \
+            libatk-bridge2.0-0 \
+            libgtk-3-0 \
+            libgbm1 \
+            libxshmfence1
+
       - name: Install dependencies
-        run: npm ci
+        run: npm i && npx puppeteer browsers install chrome-headless-shell
 
       - name: Create output folder
         run: mkdir -p prisma/generated/erd
@@ -29,7 +42,7 @@ jobs:
         run: npx prisma generate
 
       - name: Upload diagram as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: prisma-class-diagram
           path: prisma/generated/erd/classesDiagram.png
