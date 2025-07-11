@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
-  IsArray,
   IsBoolean,
   IsEnum,
   IsNotEmpty,
   IsString,
+  IsUUID,
 } from 'class-validator';
 import { Effort, EffortEnum } from 'src/enums/Effort';
 import { Severity, SeverityEnum } from 'src/enums/Severity';
@@ -12,11 +13,13 @@ import { Severity, SeverityEnum } from 'src/enums/Severity';
 export class CreateProblemBody {
   @IsString()
   @IsNotEmpty()
+  @IsUUID()
   @ApiProperty({ description: 'ID da tela associada' })
   screenId: string;
 
   @IsString()
   @IsNotEmpty()
+  @IsUUID()
   @ApiProperty({ description: 'ID da heurística associada' })
   heuristicId: string;
 
@@ -25,10 +28,12 @@ export class CreateProblemBody {
   @ApiProperty({ description: 'Descrição do problema' })
   description: string;
 
-  @IsArray()
-  @IsString({ each: true })
-  @ApiProperty({ description: 'Capturas de tela relacionadas', type: [String] })
-  screenshots: string[];
+  @ApiProperty({
+    description: 'Screenshots of the screen',
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
+  })
+  screenshots: Express.Multer.File[];
 
   @IsString()
   @IsNotEmpty()
@@ -47,6 +52,15 @@ export class CreateProblemBody {
   effort: Effort;
 
   @IsBoolean()
-  @ApiProperty({ description: 'Indica se o problema é prioritário' })
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return value.toLowerCase() === 'true';
+    }
+    return value === true;
+  })
+  @ApiProperty({
+    description: 'Indica se o problema é prioritário',
+    type: 'boolean',
+  })
   priority: boolean;
 }

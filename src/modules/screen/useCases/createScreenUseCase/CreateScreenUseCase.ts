@@ -2,11 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Screen } from '../../entities/Screen';
 import { ScreenRepository } from '../../repositories/ScreenRepository';
 import { ProjectRepository } from '../../../project/repositories/ProjectRepository';
+import { S3Service } from '../../../../infra/aws/s3.service';
 
 interface CreateScreenRequest {
   title: string;
   description: string;
-  screenshot: string;
+  screenshot: Express.Multer.File;
   projectId: string;
 }
 
@@ -15,6 +16,7 @@ export class CreateScreenUseCase {
   constructor(
     private screenRepository: ScreenRepository,
     private projectRepository: ProjectRepository,
+    private readonly s3Service: S3Service,
   ) {}
 
   async execute({
@@ -29,7 +31,14 @@ export class CreateScreenUseCase {
       throw new NotFoundException(`Project with ID ${projectId} not found.`);
     }
 
-    const screen = new Screen({ title, description, screenshot, projectId });
+    const screenshotUrl = await this.s3Service.uploadFile(screenshot);
+
+    const screen = new Screen({
+      title,
+      description,
+      screenshot: screenshotUrl,
+      projectId,
+    });
 
     await this.screenRepository.create(screen);
 
