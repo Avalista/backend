@@ -21,13 +21,13 @@ export class GetEvaluationSessionUseCase {
       throw new BadRequestException('Projeto não encontrado');
     }
 
-    const existingSession =
+    const evaluationSession =
       await this.evaluationSessionRepository.findActiveByEvaluatorAndProject(
         evaluatorId,
         projectId,
       );
 
-    if (!existingSession) {
+    if (!evaluationSession) {
       throw new BadRequestException(
         'Ainda não existe uma sessão de avaliação para este usuário nesse projeto',
       );
@@ -35,7 +35,7 @@ export class GetEvaluationSessionUseCase {
 
     const evaluationSessionDetail =
       (await this.evaluationSessionRepository.getEvaluationDetails(
-        existingSession.id,
+        evaluationSession.id,
       )) as EvaluationSession;
 
     return evaluationSessionDetail;
