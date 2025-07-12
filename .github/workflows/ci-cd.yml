@@ -2,7 +2,6 @@ name: Node.js CI/CD Pipeline
 
 on:
   push:
-    branches: [prod]
 
 jobs:
   build-push-docker:
@@ -35,10 +34,8 @@ jobs:
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            DOCKER_USER="${DOCKERHUB_USERNAME}"
-            echo "Iniciando deploy com usuário Docker: ${DOCKER_USER}"
 
-            docker pull ${DOCKER_USER}/avalista-be:latest
+            docker pull $DOCKERHUB_USERNAME/avalista-be:latest
             docker stop app || true
             docker rm app || true
             docker run -d --name app \
@@ -50,7 +47,7 @@ jobs:
               -e AWS_S3_REGION="$AWS_S3_REGION" \
               -e AWS_S3_ACCESS_KEY_ID="$AWS_S3_ACCESS_KEY_ID" \
               -e AWS_S3_SECRET_ACCESS_KEY="$AWS_S3_SECRET_ACCESS_KEY" \
-              ${DOCKER_USER}/avalista-be:latest
+              $DOCKERHUB_USERNAME/avalista-be:latest
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
