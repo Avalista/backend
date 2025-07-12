@@ -7,6 +7,8 @@ COPY prisma ./prisma
 
 # 2. Instalar dependências e gerar Prisma Client
 RUN npm ci
+# Cria o diretório necessário para o Prisma ERD
+RUN mkdir -p /app/prisma/generated/erd
 RUN npx prisma generate
 
 # 3. Copiar resto do código e fazer build
