@@ -15,20 +15,20 @@ export class S3Service {
   constructor(private configService: ConfigService) {
     this.s3 = new S3Client({
       region:
-        this.configService.get<string>('AWS_REGION') ||
+        this.configService.get<string>('AWS_S3_REGION') ||
         (() => {
-          throw new Error('AWS_REGION is not defined');
+          throw new Error('AWS_S3_REGION is not defined');
         })(),
       credentials: {
         accessKeyId:
-          this.configService.get<string>('AWS_ACCESS_KEY_ID') ||
+          this.configService.get<string>('AWS_S3_ACCESS_KEY_ID') ||
           (() => {
-            throw new Error('AWS_ACCESS_KEY_ID is not defined');
+            throw new Error('AWS_S3_ACCESS_KEY_ID is not defined');
           })(),
         secretAccessKey:
-          this.configService.get<string>('AWS_SECRET_ACCESS_KEY') ||
+          this.configService.get<string>('AWS_S3_SECRET_ACCESS_KEY') ||
           (() => {
-            throw new Error('AWS_SECRET_ACCESS_KEY is not defined');
+            throw new Error('AWS_S3_SECRET_ACCESS_KEY is not defined');
           })(),
       },
     });
