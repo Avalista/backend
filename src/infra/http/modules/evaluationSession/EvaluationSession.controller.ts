@@ -1,9 +1,15 @@
-import { Body, Controller, Get, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Request } from '@nestjs/common';
 import { CreateEvaluationSessionUseCase } from 'src/modules/evaluationSession/useCases/createEvaluationSessionUseCase/CreateEvaluationSessionUseCase';
 import { CreateEvaluationSessionRequest } from './dtos/CreateEvaluationSessionRequest';
 import { AuthenticatedRequestModel } from '../auth/models/AuthenticatedRequestModel';
 import { EvaluationSessionViewModel } from './viewModel/EvaluationSessionViewModel';
-import { ApiBearerAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EvaluationSessionViewModelDTO } from './dtos/EvaluationSessionResponseDTO';
 import { GetEvaluationSessionUseCase } from 'src/modules/evaluationSession/useCases/getEvaluationSessionUseCase/GetEvaluationSessionUseCase';
 
@@ -41,23 +47,25 @@ export class EvaluationSessionController {
   }
 
   @Get()
-  @ApiBody({
-    description: 'Dados do projeto para monitorar a avaliação',
-    type: CreateEvaluationSessionRequest,
+  @ApiQuery({
+    name: 'projectId',
+    type: String,
+    description: 'ID do projeto para monitorar a avaliação',
+    required: true,
   })
   @ApiResponse({
     status: 200,
     type: EvaluationSessionViewModelDTO,
   })
   async getEvaluation(
-    @Body() body: CreateEvaluationSessionRequest,
+    @Query('projectId') projectId: string,
     @Request() request: AuthenticatedRequestModel,
   ) {
     const evaluatorId = request.user.id;
 
     const result = await this.getEvaluationSessionUseCase.execute({
       evaluatorId,
-      projectId: body.projectId,
+      projectId,
     });
 
     return EvaluationSessionViewModel.toHttp(result);
