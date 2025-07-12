@@ -21,11 +21,11 @@ describe('Create Screen', () => {
     configServiceMock = new ConfigService() as jest.Mocked<ConfigService>;
     configServiceMock.get = jest.fn().mockImplementation((key: string) => {
       switch (key) {
-        case 'AWS_REGION':
+        case 'AWS_S3_REGION':
           return 'us-east-1';
-        case 'AWS_ACCESS_KEY_ID':
+        case 'AWS_S3_ACCESS_KEY_ID':
           return 'accessKey';
-        case 'AWS_SECRET_ACCESS_KEY':
+        case 'AWS_S3_SECRET_ACCESS_KEY':
           return 'secretKey';
         case 'AWS_S3_BUCKET':
           return 'my-bucket';
