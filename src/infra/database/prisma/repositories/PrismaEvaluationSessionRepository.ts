@@ -98,6 +98,6 @@ export class PrismaEvaluationSessionRepository
 
     if (!existingSession) return null;
 
-    return new EvaluationSession(existingSession);
+    return PrismaEvaluationSessionMapper.toDomain(existingSession);
   }
 }
