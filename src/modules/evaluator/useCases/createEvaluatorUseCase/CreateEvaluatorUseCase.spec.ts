@@ -7,6 +7,8 @@ let evaluatorRepositoryInMemory: EvaluatorRepositoryInMemory;
 let createEvaluatorUseCase: CreateEvaluatorUseCase;
 
 describe('Create Evaluator', () => {
+  const evaluatorEmail = 'email@email.com';
+
   beforeEach(() => {
     evaluatorRepositoryInMemory = new EvaluatorRepositoryInMemory();
     createEvaluatorUseCase = new CreateEvaluatorUseCase(
@@ -18,7 +20,7 @@ describe('Create Evaluator', () => {
     expect(evaluatorRepositoryInMemory.evaluators).toEqual([]);
 
     const evaluator = await createEvaluatorUseCase.execute({
-      email: 'email@email.com',
+      email: evaluatorEmail,
       name: 'name',
       password: 'password',
     });
@@ -30,7 +32,7 @@ describe('Create Evaluator', () => {
     const evaluatorPasswordWithoutEncryption = 'password';
 
     const evaluator = await createEvaluatorUseCase.execute({
-      email: 'email@email.com',
+      email: evaluatorEmail,
       name: 'name',
       password: evaluatorPasswordWithoutEncryption,
     });
@@ -45,14 +47,14 @@ describe('Create Evaluator', () => {
 
   it('should throw ConflictException if email already exists', async () => {
     await createEvaluatorUseCase.execute({
-      email: 'email@email.com',
+      email: evaluatorEmail,
       name: 'evaluator1',
       password: 'password',
     });
 
     await expect(
       createEvaluatorUseCase.execute({
-        email: 'email@email.com',
+        email: evaluatorEmail,
         name: 'evaluator2',
         password: 'password2',
       }),
