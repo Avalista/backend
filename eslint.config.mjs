@@ -1,8 +1,8 @@
-// @ts-check
 import eslint from '@eslint/js';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
+import sonarjs from 'eslint-plugin-sonarjs';
 
 export default tseslint.config(
   {
@@ -23,6 +23,18 @@ export default tseslint.config(
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
       },
+    },
+  },
+  {
+    plugins: {
+      sonarjs,
+    },
+    rules: {
+      'sonarjs/no-duplicate-string': 'warn',
+      'sonarjs/no-identical-functions': 'warn',
+      'sonarjs/no-small-switch': 'warn',
+      'sonarjs/prefer-single-boolean-return': 'warn',
+      'sonarjs/cognitive-complexity': ['warn', 15],
     },
   },
   {
