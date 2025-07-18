@@ -11,6 +11,9 @@ let projectRepositoryInMemory: ProjectRepositoryInMemory;
 let membershipRepositoryInMemory: ProjectMembershipRepositoryInMemory;
 
 describe('GetProjectDetailUseCase', () => {
+  const projectId = 'project-123';
+  const evaluatorId = 'evaluator-123';
+
   beforeEach(() => {
     projectRepositoryInMemory = new ProjectRepositoryInMemory();
     membershipRepositoryInMemory = new ProjectMembershipRepositoryInMemory();
@@ -21,17 +24,12 @@ describe('GetProjectDetailUseCase', () => {
   });
 
   it('Should throw NotFoundException if project is not found', async () => {
-    const projectId = 'project-123';
-    const evaluatorId = 'evaluator-123';
-
     await expect(
       getProjectDetailUseCase.execute(projectId, evaluatorId),
     ).rejects.toThrow(new NotFoundException('Project not found'));
   });
 
   it('Should throw ForbiddenException if no membership is found for the evaluator', async () => {
-    const projectId = 'project-123';
-    const evaluatorId = 'evaluator-123';
     const project = makeProject({ id: projectId });
 
     await projectRepositoryInMemory.create(project);
@@ -46,8 +44,6 @@ describe('GetProjectDetailUseCase', () => {
   });
 
   it('Should throw ForbiddenException if evaluatorId does not match the membership evaluatorId', async () => {
-    const projectId = 'project-123';
-    const evaluatorId = 'evaluator-123';
     const wrongEvaluatorId = 'evaluator-456';
     const project = makeProject({ id: projectId });
     const evaluator = makeEvaluator({});
@@ -74,8 +70,6 @@ describe('GetProjectDetailUseCase', () => {
   });
 
   it('Should return the project when evaluator has the correct permissions', async () => {
-    const projectId = 'project-123';
-    const evaluatorId = 'evaluator-123';
     const project = makeProject({ id: projectId });
     const evaluator = makeEvaluator({});
 
