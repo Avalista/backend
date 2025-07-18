@@ -27,6 +27,7 @@ export class CategoryRepositoryInMemory implements CategoryRepository {
       (currentCategory) => currentCategory.id === category.id,
     );
 
+    // eslint-disable-next-line security/detect-object-injection
     if (categoryIndex >= 0) this.categories[categoryIndex] = category;
 
     return Promise.resolve();
