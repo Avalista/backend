@@ -10,13 +10,25 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 
+interface MatchableFields {
+  password?: string;
+  confirmPassword?: string;
+}
+
 @ValidatorConstraint({ name: 'Match', async: false })
 class MatchConstraint implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
-    const obj = args.object as Record<string, unknown>;
+    const obj = args.object as MatchableFields;
     const relatedPropertyName = args.constraints[0] as string;
-    const relatedValue = obj[relatedPropertyName] as string;
-    return value === relatedValue;
+
+    switch (relatedPropertyName) {
+      case 'password':
+        return value === obj.password;
+      case 'confirmPassword':
+        return value === obj.confirmPassword;
+      default:
+        return false;
+    }
   }
 
   defaultMessage(args: ValidationArguments) {

@@ -3,6 +3,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import sonarjs from 'eslint-plugin-sonarjs';
+import security from 'eslint-plugin-security';
 
 export default tseslint.config(
   {
@@ -28,6 +29,7 @@ export default tseslint.config(
   {
     plugins: {
       sonarjs,
+      security
     },
     rules: {
       'sonarjs/no-duplicate-string': 'warn',
@@ -35,6 +37,7 @@ export default tseslint.config(
       'sonarjs/no-small-switch': 'warn',
       'sonarjs/prefer-single-boolean-return': 'warn',
       'sonarjs/cognitive-complexity': ['warn', 15],
+      ...security.configs.recommended.rules,
     },
   },
   {
