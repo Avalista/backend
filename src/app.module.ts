@@ -9,10 +9,12 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './infra/http/modules/auth/guards/JwtAuth.guard';
 import { EvaluationSessionModule } from './infra/http/modules/evaluationSession/EvaluationSession.module';
 import { ProblemModule } from './infra/http/modules/problem/Problem.module';
+import { FileUploadModule } from './infra/http/modules/fileUpload/fileUpload.module';
 
 @Module({
   imports: [
     DatabaseModule,
+    FileUploadModule,
     AuthModule,
     CategoryModule,
     EvaluatorModule,

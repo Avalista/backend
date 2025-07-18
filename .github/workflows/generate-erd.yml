@@ -1,0 +1,48 @@
+name: Generate Prisma Class Diagram
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch: # permite rodar manualmente
+
+jobs:
+  generate-erd:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install system dependencies for Puppeteer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libnss3 \
+            libxss1 \
+            libasound2t64 \
+            libatk-bridge2.0-0 \
+            libgtk-3-0 \
+            libgbm1 \
+            libxshmfence1
+
+      - name: Install dependencies
+        run: npm i && npx puppeteer browsers install chrome-headless-shell
+
+      - name: Create output folder
+        run: mkdir -p prisma/generated/erd
+
+      - name: Generate Prisma Client and ERD
+        run: npx prisma generate
+
+      - name: Upload diagram as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: prisma-class-diagram
+          path: prisma/generated/erd/classesDiagram.svg

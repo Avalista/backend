@@ -3,7 +3,7 @@ module.exports = {
   parserPreset: {
     parserOpts: {
       headerPattern:
-        /^(feat|fix|docs|style|refactor|test|chore): (.+)\. \(#\d+\)$/,
+        /^(feat|fix|docs|style|refactor|test|chore|wip): (.+)\. \(#\d+\)$/,
       headerCorrespondence: ['type', 'subject'],
     },
   },
@@ -11,7 +11,7 @@ module.exports = {
     'type-enum': [
       2,
       'always',
-      ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore'],
+      ['feat', 'fix', 'docs', 'style', 'refactor', 'test', 'chore', 'wip'],
     ],
     'references-empty': [2, 'never'],
   },
