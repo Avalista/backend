@@ -1,4 +1,4 @@
-FROM node:24-alpine AS builder
+FROM node:25-alpine AS builder
 WORKDIR /app
 
 # 1. Copiar arquivos essenciais primeiro
@@ -15,7 +15,7 @@ COPY . .
 RUN npm run build  # Agora os tipos do Prisma estarão disponíveis
 
 # Estágio de produção
-FROM node:24-alpine
+FROM node:25-alpine
 WORKDIR /app
 ENV NODE_ENV=production
 
